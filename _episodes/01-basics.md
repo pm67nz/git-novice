@@ -6,7 +6,7 @@ questions:
 - "What is version control and why should I use it?"
 objectives:
 - "Understand the benefits of an automated version control system."
-- "Understand the basics of how Git works."
+- "Understand the basics of how Pijul works."
 keypoints:
 - "Version control is like an unlimited 'undo'."
 - "Version control also allows many people to work in parallel."
@@ -43,15 +43,14 @@ same document.
 
 ![Different Versions Can be Saved](../fig/versions.svg)
 
-Unless there are conflicts, you can even play two sets of changes onto the same base document.
+Unless there are conflicts, you can even combine two sets of changes onto the same base document.
 
 ![Multiple Versions Can be Merged](../fig/merge.svg)
 
 A version control system is a tool that keeps track of these changes for us and
 helps us version and merge our files. It allows you to
-decide which changes make up the next version, called a
-[commit]({{ page.root }}/reference/#commit), and keeps useful metadata about them. The
-complete history of commits for a particular project and their metadata make up
+decide which changes make up the next version, and keeps useful metadata about them. The
+complete set of changes made to a particular project and their metadata make up
 a [repository]({{ page.root }}/reference/#repository). Repositories can be kept in sync
 across different computers facilitating collaboration among different people.
 
@@ -60,10 +59,11 @@ across different computers facilitating collaboration among different people.
 > Automated version control systems are nothing new.
 > Tools like RCS, CVS, or Subversion have been around since the early 1980s and are used by many large companies.
 > However, many of these are now becoming considered as legacy systems due to various limitations in their capabilities.
-> In particular, the more modern systems, such as Git and [Mercurial](http://swcarpentry.github.io/hg-novice/)
+> In particular, more modern systems such as Git and [Mercurial](http://swcarpentry.github.io/hg-novice/)
 > are *distributed*, meaning that they do not need a centralized server to host the repository.
 > These modern systems also include powerful merging tools that make it possible for multiple authors to work within
-> the same files concurrently.
+> the same files concurrently.  Pijul further improves on these systems by allowing more flexibility in the order in
+> which changes are merged, and making better guarentees about the correctness of merges.
 {: .callout}
 
 > ## Paper Writing
