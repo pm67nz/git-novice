@@ -1,46 +1,29 @@
 ---
-title: Setting Up Git
+title: Setting Up Pijul
 teaching: 5
 exercises: 0
 questions:
-- "How do I get set up to use Git?"
+- "How do I get set up to use Pijul?"
 objectives:
-- "Configure `git` the first time it is used on a computer."
-- "Understand the meaning of the `--global` configuration flag."
+- "Configure `pijul` the first time it is used on a computer."
+- "Understand how to customize your pijul configuration."
 keypoints:
--   "Use `git config` to configure a user name, email address, editor, and other preferences once per machine."
+-   "Change your email address, editor, and other preferences once per machine."
 ---
 
-When we use Git on a new computer for the first time,
-we need to configure a few things. Below are a few examples
-of configurations we will set as we get started with Git:
-
-*   our name and email address,
-*   to colorize our output,
-*   what our preferred text editor is,
-*   and that we want to use these settings globally (i.e. for every project)
-
-On a command line, Git commands are written as `git verb`,
-where `verb` is what we actually want to do. So here is how
-Dracula sets up his new laptop:
+When you used Pijul for the first time, it asked you for your email address.  
+If you later need to change this address you will need to edit the file
+`~/.pijulconfig/config`
 
 ~~~
-$ git config --global user.name "Vlad Dracula"
-$ git config --global user.email "vlad@tran.sylvan.ia"
-$ git config --global color.ui "auto"
+nano ~/.pijulconfig/config
 ~~~
-{: .bash}
 
-Please use your own name and email address instead of Dracula's. This user name and email will be associated with your subsequent Git activity,
-which means that any changes pushed to
-[GitHub](http://github.com/),
-[BitBucket](http://bitbucket.org/),
-[GitLab](http://gitlab.com/) or
-another Git host server
-in a later lesson will include this information.
+In the future it will also be possible to set your prefered editor here for editing
+patch descriptions.
 
-For these lessons, we will be interacting with [GitHub](http://github.com/) and so the email address used should be the same as the one used when setting up your GitHub account. If you are concerned about privacy, please review [GitHub's instructions for keeping your email address private][git-privacy]. 
-If you elect to use a private email address with GitHub, then use that same email address for the `user.email` value, e.g. `username@users.noreply.github.com` replacing `username` with your GitHub one. You can change the email address later on by using the `git config` command again.
+For these lessons, we will be interacting with the [Nest](http://nest.pijul.com/) and so the email address used should be the same as the one used when setting up your Nest account. 
+If you elect to use a private email address with the Nest, then use that same email address for pijul.
 
 Dracula also has to set his favorite text editor, following this table:
 
@@ -67,49 +50,17 @@ It is possible to reconfigure the text editor for Git whenever you want to chang
 > Note that `vim` is the default editor for for many programs, if you haven't used `vim` before and wish to exit a session, type `Esc` then `:q!` and `Enter`.
 {: .callout}
 
-The four commands we just ran above only need to be run once: the flag `--global` tells Git
-to use the settings for every project, in your user account, on this computer.
 
-You can check your settings at any time:
-
-~~~
-$ git config --list
-~~~
-{: .bash}
-
-You can change your configuration as many times as you want: just use the
-same commands to choose another editor or update your email address.
-
-> ## Proxy
+> ## Pijul Help and Manual
 >
-> In some networks you need to use a
-> [proxy](https://en.wikipedia.org/wiki/Proxy_server). If this is the case, you
-> may also need to tell Git about the proxy:
+> Always remember that if you forget a `pijul` command, you can access the list of commands by using `pijul help`, and get help on
+> any specific command with `--help`:
 >
 > ~~~
-> $ git config --global http.proxy proxy-url
-> $ git config --global https.proxy proxy-url
-> ~~~
-> {: .bash}
->
-> To disable the proxy, use
->
-> ~~~
-> $ git config --global --unset http.proxy
-> $ git config --global --unset https.proxy
+> $ pijul help
+> $ pijul init --help
 > ~~~
 > {: .bash}
 {: .callout}
 
-> ## Git Help and Manual
->
-> Always remember that if you forget a `git` command, you can access the list of commands by using `-h` and access the Git manual by using `--help` :
->
-> ~~~
-> $ git config -h
-> $ git config --help
-> ~~~
-> {: .bash}
-{: .callout}
-
-[git-privacy]: https://help.github.com/articles/keeping-your-email-address-private/
+Online documentation for Pijul can be found at the [Pijul web site](https://pijul.org/manual/)
