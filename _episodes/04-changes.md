@@ -3,19 +3,19 @@ title: Tracking Changes
 teaching: 20
 exercises: 0
 questions:
-- "How do I record changes in Git?"
+- "How do I record changes in Pijul?"
 - "How do I check the status of my version control repository?"
 - "How do I record notes about what changes I made and why?"
 objectives:
-- "Go through the modify-add-commit cycle for one or more files."
-- "Explain where information is stored at each stage of Git commit workflow."
-- "Distinguish between descriptive and non-descriptive commit messages."
+- "Go through the modify-record cycle for one or more files."
+- "Explain where information is stored at each stage of the Pijul workflow."
+- "Distinguish between descriptive and non-descriptive patch descriptions."
 keypoints:
-- "`git status` shows the status of a repository."
-- "Files can be stored in a project's working directory (which users see), the staging area (where the next commit is being built up) and the local repository (where commits are permanently recorded)."
-- "`git add` puts files in the staging area."
-- "`git commit` saves the staged content as a new commit in the local repository."
-- "Always write a log message when committing changes."
+- "`pijul status` shows the status of a repository."
+- "Files can be stored in a project's working directory (which users see), and the local repository (where commits are permanently recorded)."
+- "`pijul add` tells Pijul to start tracking files."
+- "`pijul record` saves any changes to the tracked files as a new patch in the local repository."
+- "Always write a log message when recording patches."
 ---
 
 First let's make sure we're still in the right directory.
@@ -37,7 +37,7 @@ Let's create a file called `mars.txt` that contains some notes
 about the Red Planet's suitability as a base.
 We'll use `nano` to edit the file;
 you can use whatever editor you like.
-In particular, this does not have to be the `core.editor` you set globally earlier. But remember, the bash command to create or edit a new file will depend on the editor you choose (it might not be `nano`). For a refresher on text editors, check out ["Which Editor?"](https://swcarpentry.github.io/shell-novice/03-create/) in [The Unix Shell](https://swcarpentry.github.io/shell-novice/) lesson.
+The bash command to create or edit a new file will depend on the editor you choose (it might not be `nano`). For a refresher on text editors, check out ["Which Editor?"](https://swcarpentry.github.io/shell-novice/03-create/) in [The Unix Shell](https://swcarpentry.github.io/shell-novice/) lesson.
 
 ~~~
 $ nano mars.txt
@@ -74,134 +74,143 @@ Cold and dry, but everything is my favorite color
 {: .output}
 
 If we check the status of our project again,
-Git tells us that it's noticed the new file:
+Pijul tells us that it's noticed the new file:
 
 ~~~
-$ git status
+$ pijul status
 ~~~
 {: .bash}
 
 ~~~
-On branch master
-
-Initial commit
-
 Untracked files:
-   (use "git add <file>..." to include in what will be committed)
+  (use "pijul add <file>..." to track them)
 
-	mars.txt
-nothing added to commit but untracked files present (use "git add" to track)
+        mars.txt
 ~~~
 {: .output}
 
 The "untracked files" message means that there's a file in the directory
-that Git isn't keeping track of.
-We can tell Git to track a file using `git add`:
+that Pijul isn't keeping track of.
+We can tell Pijul to track a file using `pijul add`:
 
 ~~~
-$ git add mars.txt
+$ pijul add mars.txt
 ~~~
 {: .bash}
 
 and then check that the right thing happened:
 
 ~~~
-$ git status
+$ pijul status
 ~~~
 {: .bash}
 
 ~~~
-On branch master
+Changes not yet recorded:
+  (use "pijul record ..." to record a new patch)
 
-Initial commit
-
-Changes to be committed:
-  (use "git rm --cached <file>..." to unstage)
-
-	new file:   mars.txt
-
+        new file:  mars.txt
 ~~~
 {: .output}
 
-Git now knows that it's supposed to keep track of `mars.txt`,
-but it hasn't recorded these changes as a commit yet.
-To get it to do that,
-we need to run one more command:
+Pijul now knows that it's supposed to keep track of `mars.txt`,
+but it hasn't recorded it in the repository yet.
+To get it to do that, we need to run one more command:
 
 ~~~
-$ git commit -m "Start notes on Mars as a base"
+$ pijul record
 ~~~
 {: .bash}
 
 ~~~
-[master (root-commit) f22b25e] Start notes on Mars as a base
- 1 file changed, 1 insertion(+)
- create mode 100644 mars.txt
+added file /Users/pmax001/tmp/planets/mars.txt
+
+Shall I record this change? (1/2) [ynkad] 
 ~~~
 {: .output}
 
-When we run `git commit`,
-Git takes everything we have told it to save by using `git add`
-and stores a copy permanently inside the special `.git` directory.
-This permanent copy is called a [commit]({{ page.root }}/reference/#commit)
-(or [revision]({{ page.root }}/reference/#revision)) and its short identifier is `f22b25e`
-(Your commit may have another identifier.)
-
-We use the `-m` flag (for "message")
-to record a short, descriptive, and specific comment that will help us remember later on what we did and why.
-If we just run `git commit` without the `-m` option,
-Git will launch `nano` (or whatever other editor we configured as `core.editor`)
-so that we can write a longer message.
-
-[Good commit messages][commit-messages] start with a brief (<50 characters) summary of
-changes made in the commit.  If you want to go into more detail, add
-a blank line between the summary line and your additional notes.
-
-If we run `git status` now:
+Tell it `y` for "Yes"
 
 ~~~
-$ git status
+In file "/Users/pmax001/tmp/planets/mars.txt"
+
++ Cold and dry, but everything is my favorite color
+
+Shall I record this change? (2/2) [ynkad] 
+~~~
+
+Again, `y` for "Yes".
+
+~~~
+What is the name of this patch?
+~~~
+
+Give a short, descriptive, and specific comment that will help us remember later on what we did and why, 
+for example: "Start notes on Mars as a base".
+
+~~~
+What is your name <and email address>? 
+~~~
+
+Because this is the first time you have added content to a repository Pijul has asked you for your email address. This address will be associated with this change and your future ones, which will become important when you share your changes with other people.  
+
+~~~
+Recorded patch AScIP6rhgj4vq996IEpxO88CAV9uT-R3mLzhCSIt6SEgDa5Ebn1phl0xLMubjme-l-YrTFdZ-j7Xqff8gwKqaS8
+~~~
+
+When we run `pijul record`,
+Pijul takes everything which has changed in the tracked files 
+and stores that permanently inside the special `.pijul` directory.
+This permanent copy is called a [patch]({{ page.root }}/reference/#patch)
+and its "hash" which serves as a permanent internal identifier is "AScIP6rhgj4vq996IEpxO88CAV9uT-R3mLzhCSIt6SEgDa5Ebn1phl0xLMubjme-l-YrTFdZ-j7Xqff8gwKqaS8". Your patch may have a different hash.
+
+You can use the `-m` option of `pijul record` (for "message")
+to specify the patch name on the command line instead of being prompted for it.
+
+[Good patch names][patch-names] are a brief (<50 characters) summary of
+changes made in the patch.
+
+If we run `pijul status` now:
+
+~~~
+$ pijul status
 ~~~
 {: .bash}
 
 ~~~
-On branch master
-nothing to commit, working directory clean
+Nothing to record, working tree clean
 ~~~
 {: .output}
 
 it tells us everything is up to date.
 If we want to know what we've done recently,
-we can ask Git to show us the project's history using `git log`:
+we can ask pijul to show us the project's history using `pijul changes`:
 
 ~~~
-$ git log
+$ pijul changes
 ~~~
 {: .bash}
 
 ~~~
-commit f22b25e3233b4645dabd0d81e651fe074bd8e73b
-Author: Vlad Dracula <vlad@tran.sylvan.ia>
-Date:   Thu Aug 22 09:51:46 2013 -0400
+Hash: AbJ7yztMWV-Hk0tw3Jvds88J4RohykTCzN-hP87oTiPRXfp7k_yfjCOhqyKk26fKmhYp9tHvL4Kz8zJoJupXTuE
+Internal id: snvLO0xZX4c
+Authors: ["Vlad Dracula <vlad@tran.sylvan.ia>"]
+Timestamp: 2017-09-28 10:10:43.549970 UTC
 
     Start notes on Mars as a base
 ~~~
 {: .output}
 
-`git log` lists all commits  made to a repository in reverse chronological order.
-The listing for each commit includes
-the commit's full identifier
-(which starts with the same characters as
-the short identifier printed by the `git commit` command earlier),
-the commit's author,
-when it was created,
-and the log message Git was given when the commit was created.
+`pijul changes` lists all patches recorded in the repository.
+The listing for each patch includes
+its author, when it was created,
+and the name it was given when it was created.
 
 > ## Where Are My Changes?
 >
 > If we run `ls` at this point, we will still see just one file called `mars.txt`.
-> That's because Git saves information about files' history
-> in the special `.git` directory mentioned earlier
+> That's because Pijul saves information about files' history
+> in the special `.pijul` directory mentioned earlier
 > so that our filesystem doesn't become cluttered
 > (and so that we can't accidentally edit or delete an old version).
 {: .callout}
@@ -222,150 +231,54 @@ The two moons may be a problem for Wolfman
 ~~~
 {: .output}
 
-When we run `git status` now,
+When we run `pijul status` now,
 it tells us that a file it already knows about has been modified:
 
 ~~~
-$ git status
+$ pijul status
 ~~~
 {: .bash}
 
 ~~~
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
+Changes not yet recorded:
+  (use "pijul record ..." to record a new patch)
 
-	modified:   mars.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
+        modified:  mars.txt
 ~~~
 {: .output}
 
-The last line is the key phrase:
-"no changes added to commit".
-We have changed this file,
-but we haven't told Git we will want to save those changes
-(which we do with `git add`)
-nor have we saved them (which we do with `git commit`).
-So let's do that now. It is good practice to always review
-our changes before saving them. We do this using `git diff`.
+It is good practice to review
+our changes before saving them. We do this using `pijul diff`.
 This shows us the differences between the current state
-of the file and the most recently saved version:
+of the file and what is recorded in the repository:
 
 ~~~
-$ git diff
-~~~
-{: .bash}
-
-~~~
-diff --git a/mars.txt b/mars.txt
-index df0654a..315bf3a 100644
---- a/mars.txt
-+++ b/mars.txt
-@@ -1 +1,2 @@
- Cold and dry, but everything is my favorite color
-+The two moons may be a problem for Wolfman
-~~~
-{: .output}
-
-The output is cryptic because
-it is actually a series of commands for tools like editors and `patch`
-telling them how to reconstruct one file given the other.
-If we break it down into pieces:
-
-1.  The first line tells us that Git is producing output similar to the Unix `diff` command
-    comparing the old and new versions of the file.
-2.  The second line tells exactly which versions of the file
-    Git is comparing;
-    `df0654a` and `315bf3a` are unique computer-generated labels for those versions.
-3.  The third and fourth lines once again show the name of the file being changed.
-4.  The remaining lines are the most interesting, they show us the actual differences
-    and the lines on which they occur.
-    In particular,
-    the `+` marker in the first column shows where we added a line.
-
-After reviewing our change, it's time to commit it:
-
-~~~
-$ git commit -m "Add concerns about effects of Mars' moons on Wolfman"
-$ git status
+$ pijul diff
 ~~~
 {: .bash}
 
 ~~~
-On branch master
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
+In file "~/dracula/planets/mars.txt"
 
-	modified:   mars.txt
-
-no changes added to commit (use "git add" and/or "git commit -a")
++ The two moons may be a problem for Wolfman
 ~~~
 {: .output}
 
-Whoops:
-Git won't commit because we didn't use `git add` first.
-Let's fix that:
+After reviewing our change, it's time to record it:
 
 ~~~
-$ git add mars.txt
-$ git commit -m "Add concerns about effects of Mars' moons on Wolfman"
+$ pijul record -m "Add concerns about effects of Mars' moons on Wolfman"
+$ pijul status
 ~~~
 {: .bash}
 
 ~~~
-[master 34961b1] Add concerns about effects of Mars' moons on Wolfman
- 1 file changed, 1 insertion(+)
+Nothing to record, working tree clean
 ~~~
 {: .output}
 
-Git insists that we add files to the set we want to commit
-before actually committing anything. This allows us to commit our
-changes in stages and capture changes in logical portions rather than
-only large batches.
-For example,
-suppose we're adding a few citations to our supervisor's work
-to our thesis.
-We might want to commit those additions,
-and the corresponding addition to the bibliography,
-but *not* commit the work we're doing on the conclusion
-(which we haven't finished yet).
 
-To allow for this,
-Git has a special *staging area*
-where it keeps track of things that have been added to
-the current [changeset]({{ page.root }}/reference/#changeset)
-but not yet committed.
-
-> ## Staging Area
->
-> If you think of Git as taking snapshots of changes over the life of a project,
-> `git add` specifies *what* will go in a snapshot
-> (putting things in the staging area),
-> and `git commit` then *actually takes* the snapshot, and
-> makes a permanent record of it (as a commit).
-> If you don't have anything staged when you type `git commit`,
-> Git will prompt you to use `git commit -a` or `git commit --all`,
-> which is kind of like gathering *everyone* for the picture!
-> However, it's almost always better to
-> explicitly add things to the staging area, because you might
-> commit changes you forgot you made. (Going back to snapshots,
-> you might get the extra with incomplete makeup walking on
-> the stage for the snapshot because you used `-a`!)
-> Try to stage things manually,
-> or you might find yourself searching for "git undo commit" more
-> than you would like!
-{: .callout}
-
-![The Git Staging Area](../fig/git-staging-area.svg)
-
-Let's watch as our changes to a file move from our editor
-to the staging area
-and into long-term storage.
-First,
-we'll add another line to the file:
+Let's add another line to the file:
 
 ~~~
 $ nano mars.txt
@@ -381,127 +294,45 @@ But the Mummy will appreciate the lack of humidity
 {: .output}
 
 ~~~
-$ git diff
+$ pijul record -m "Discuss concerns about Mars' climate for Mummy"
 ~~~
 {: .bash}
-
-~~~
-diff --git a/mars.txt b/mars.txt
-index 315bf3a..b36abfd 100644
---- a/mars.txt
-+++ b/mars.txt
-@@ -1,2 +1,3 @@
- Cold and dry, but everything is my favorite color
- The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity
-~~~
-{: .output}
-
-So far, so good:
-we've added one line to the end of the file
-(shown with a `+` in the first column).
-Now let's put that change in the staging area
-and see what `git diff` reports:
-
-~~~
-$ git add mars.txt
-$ git diff
-~~~
-{: .bash}
-
-There is no output:
-as far as Git can tell,
-there's no difference between what it's been asked to save permanently
-and what's currently in the directory.
-However,
-if we do this:
-
-~~~
-$ git diff --staged
-~~~
-{: .bash}
-
-~~~
-diff --git a/mars.txt b/mars.txt
-index 315bf3a..b36abfd 100644
---- a/mars.txt
-+++ b/mars.txt
-@@ -1,2 +1,3 @@
- Cold and dry, but everything is my favorite color
- The two moons may be a problem for Wolfman
-+But the Mummy will appreciate the lack of humidity
-~~~
-{: .output}
-
-it shows us the difference between
-the last committed change
-and what's in the staging area.
-Let's save our changes:
-
-~~~
-$ git commit -m "Discuss concerns about Mars' climate for Mummy"
-~~~
-{: .bash}
-
-~~~
-[master 005937f] Discuss concerns about Mars' climate for Mummy
- 1 file changed, 1 insertion(+)
-~~~
-{: .output}
-
-check our status:
-
-~~~
-$ git status
-~~~
-{: .bash}
-
-~~~
-On branch master
-nothing to commit, working directory clean
-~~~
-{: .output}
 
 and look at the history of what we've done so far:
 
 ~~~
-$ git log
+$ pijul changes
 ~~~
 {: .bash}
 
 ~~~
-commit 005937fbe2a98fb83f0ade869025dc2636b4dad5
-Author: Vlad Dracula <vlad@tran.sylvan.ia>
-Date:   Thu Aug 22 10:14:07 2013 -0400
+Hash: AUfGUxyLI9-kSLLa7UpuG5xWhsoHXRQTXsnSNSQbunK-qUgaSGSplG3YhTWb1Tpi-Rdr2mREeYf8Ap6Xgg_HOB8
+Internal id: R8ZTHIsj36Q
+Authors: ["Vlad Dracula <vlad@tran.sylvan.ia>"]
+Timestamp: 2017-09-28 10:25:29.271196 UTC
 
     Discuss concerns about Mars' climate for Mummy
 
-commit 34961b159c27df3b475cfe4415d94a6d1fcd064d
-Author: Vlad Dracula <vlad@tran.sylvan.ia>
-Date:   Thu Aug 22 10:07:21 2013 -0400
+Hash: AUI2zumJX7xHr27JErfJIJauE3_KEfKGn3CS1asWMrPpADIZLw_uQW_R0w80QJo6n3k77cVlGXBLwp6qpiqwil4
+Internal id: QjbO6YlfvEc
+Authors: ["Vlad Dracula <vlad@tran.sylvan.ia>"]
+Timestamp: 2017-09-28 10:21:56.863250 UTC
 
     Add concerns about effects of Mars' moons on Wolfman
 
-commit f22b25e3233b4645dabd0d81e651fe074bd8e73b
-Author: Vlad Dracula <vlad@tran.sylvan.ia>
-Date:   Thu Aug 22 09:51:46 2013 -0400
+Hash: AbJ7yztMWV-Hk0tw3Jvds88J4RohykTCzN-hP87oTiPRXfp7k_yfjCOhqyKk26fKmhYp9tHvL4Kz8zJoJupXTuE
+Internal id: snvLO0xZX4c
+Authors: ["Vlad Dracula <vlad@tran.sylvan.ia>"]
+Timestamp: 2017-09-28 10:10:43.549970 UTC
 
     Start notes on Mars as a base
 ~~~
 {: .output}
 
-> ## Word-based diffing
+> ## Paging the output
 >
-> Sometimes, e.g. in the case of the text documments a line-wise
-> diff is too coarse. That is where the `--color-words` option of
-> `git diff` comes in very useful as it highlights the changed
-> words using colors.
-{: .callout}
-
-> ## Paging the Log
->
-> When the output of `git log` is too long to fit in your screen,
-> `git` uses a program to split it into pages of the size of your screen.
+> When the output of `pijul changes` is too long to fit in your screen,
+> `pijul` uses a program to split it into pages of the size of your screen.
 > When this "pager" is called, you will notice that the last line in your
 > screen is a `:`, instead of your usual prompt.
 >
@@ -511,247 +342,16 @@ Date:   Thu Aug 22 09:51:46 2013 -0400
 >     and navigate through matches pressing `n`.
 {: .callout}
 
-> ## Limit Log Size
->
-> To avoid having `git log` cover your entire terminal screen, you can limit the
-> number of commits that Git lists by using `-N`, where `N` is the number of
-> commits that you want to view. For example, if you only want information from
-> the last commit you can use:
->
-> ~~~
-> $ git log -1
-> ~~~
-> {: .bash}
->
-> ~~~
-> commit 005937fbe2a98fb83f0ade869025dc2636b4dad5
-> Author: Vlad Dracula <vlad@tran.sylvan.ia>
-> Date:   Thu Aug 22 10:14:07 2013 -0400
->
->    Discuss concerns about Mars' climate for Mummy
-> ~~~
-> {: .output}
->
-> You can also reduce the quantity of information using the
-> `--oneline` option:
->
-> ~~~
-> $ git log --oneline
-> ~~~
-> {: .bash}
-> ~~~
-> * 005937f Discuss concerns about Mars' climate for Mummy
-> * 34961b1 Add concerns about effects of Mars' moons on Wolfman
-> * f22b25e Start notes on Mars as a base
-> ~~~
-> {: .output}
->
-> You can also combine the `--oneline` options with others. One useful
-> combination is:
->
-> ~~~
-> $ git log --oneline --graph --all --decorate
-> ~~~
-> {: .bash}
-> ~~~
-> * 005937f Discuss concerns about Mars' climate for Mummy (HEAD, master)
-> * 34961b1 Add concerns about effects of Mars' moons on Wolfman
-> * f22b25e Start notes on Mars as a base
-> ~~~
-> {: .output}
-{: .callout}
-
 > ## Directories
 >
-> Two important facts you should know about directories in Git.
->
-> 1. Git does not track directories on their own, only files within them.
-> Try it for yourself:
->
-> ~~~
-> $ mkdir directory
-> $ git status
-> $ git add directory
-> $ git status
-> ~~~
-> {: .bash}
->
-> Note, our newly created empty directory `directory` does not appear in
-> the list of untracked files even if we explicitly add it (_via_ `git add`) to our
-> repository. This is the reason why you will sometimes see `.gitkeep` files
-> in otherwise empty directories. Unlike `.gitignore`, these files are not special
-> and their sole purpose is to populate a directory so that Git adds it to
-> the repository. In fact, you can name such files anything you like.
->
-> {:start="2"}
-> 2. If you create a directory in your Git repository and populate it with files,
+> If you create a directory in your Git repository and populate it with files,
 > you can add all files in the directory at once by:
 >
 > ~~~
-> git add <directory-with-files>
+> pijul add directory_name --recursive 
 > ~~~
 > {: .bash}
 >
 {: .callout}
 
-To recap, when we want to add changes to our repository,
-we first need to add the changed files to the staging area
-(`git add`) and then commit the staged changes to the
-repository (`git commit`):
 
-![The Git Commit Workflow](../fig/git-committing.svg)
-
-> ## Choosing a Commit Message
->
-> Which of the following commit messages would be most appropriate for the
-> last commit made to `mars.txt`?
->
-> 1. "Changes"
-> 2. "Added line 'But the Mummy will appreciate the lack of humidity' to mars.txt"
-> 3. "Discuss effects of Mars' climate on the Mummy"
->
-> > ## Solution
-> > Answer 1 is not descriptive enough,
-> > and answer 2 is too descriptive and redundant,
-> > but answer 3 is good: short but descriptive.
-> {: .solution}
-{: .challenge}
-
-> ## Committing Changes to Git
->
-> Which command(s) below would save the changes of `myfile.txt`
-> to my local Git repository?
->
-> 1. `$ git commit -m "my recent changes"`
->
-> 2. `$ git init myfile.txt`
->    `$ git commit -m "my recent changes"`
->
-> 3. `$ git add myfile.txt`
->    `$ git commit -m "my recent changes"`
->
-> 4. `$ git commit -m myfile.txt "my recent changes"`
->
-> > ## Solution
-> >
-> > 1. Would only create a commit if files have already been staged.
-> > 2. Would try to create a new repository.
-> > 3. Is correct: first add the file to the staging area, then commit.
-> > 4. Would try to commit a file "my recent changes" with the message myfile.txt.
-> {: .solution}
-{: .challenge}
-
-> ## Committing Multiple Files
->
-> The staging area can hold changes from any number of files
-> that you want to commit as a single snapshot.
->
-> 1. Add some text to `mars.txt` noting your decision
-> to consider Venus as a base
-> 2. Create a new file `venus.txt` with your initial thoughts
-> about Venus as a base for you and your friends
-> 3. Add changes from both files to the staging area,
-> and commit those changes.
->
-> > ## Solution
-> >
-> > First we make our changes to the `mars.txt` and `venus.txt` files:
-> > ~~~
-> > $ nano mars.txt
-> > $ cat mars.txt
-> > ~~~
-> > {: .bash}
-> > ~~~
-> > Maybe I should start with a base on Venus.
-> > ~~~
-> > {: .output}
-> > ~~~
-> > $ nano venus.txt
-> > $ cat venus.txt
-> > ~~~
-> > {: .bash}
-> > ~~~
-> > Venus is a nice planet and I definitely should consider it as a base.
-> > ~~~
-> > {: .output}
-> > Now you can add both files to the staging area. We can do that in one line:
-> >
-> > ~~~
-> > $ git add mars.txt venus.txt
-> > ~~~
-> > {: .bash}
-> > Or with multiple commands:
-> > ~~~
-> > $ git add mars.txt
-> > $ git add venus.txt
-> > ~~~
-> > {: .bash}
-> > Now the files are ready to commit. You can check that using `git status`. If you are ready to commit use:
-> > ~~~
-> > $ git commit -m "Write plans to start a base on Venus"
-> > ~~~
-> > {: .bash}
-> > ~~~
-> > [master cc127c2]
-> >  Write plans to start a base on Venus
-> >  2 files changed, 2 insertions(+)
-> >  create mode 100644 venus.txt
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
-
-> ## Author and Committer
->
-> For each of the commits you have done, Git stored your name twice.
-> You are named as the author and as the committer. You can observe
-> that by telling Git to show you more information about your last
-> commits:
->
-> ~~~
-> $ git log --format=full
-> ~~~
-> {: .bash}
->
-> When commiting you can name someone else as the author:
->
-> ~~~
-> $ git commit --author="Vlad Dracula <vlad@tran.sylvan.ia>"
-> ~~~
-> {: .bash}
->
-> Create a new repository and create two commits: one without the
-> `--author` option and one by naming a colleague of yours as the
-> author. Run `git log` and `git log --format=full`. Think about ways
-> how that can allow you to collaborate with your colleagues.
->
-> > ## Solution
-> >
-> > ~~~
-> > $ git add me.txt
-> > $ git commit -m "Update Vlad's bio." --author="Frank N. Stein <franky@monster.com>"
-> > ~~~
-> > {: .bash}
-> > ~~~
-> > [master 4162a51] Update Vlad's bio.
-> > Author: Frank N. Stein <franky@monster.com>
-> > 1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > $ git log --format=full
-> > commit 4162a51b273ba799a9d395dd70c45d96dba4e2ff
-> > Author: Frank N. Stein <franky@monster.com>
-> > Commit: Vlad Dracula <vlad@tran.sylvan.ia>
-> >
-> > Update Vlad's bio.
-> >
-> > commit aaa3271e5e26f75f11892718e83a3e2743fab8ea
-> > Author: Vlad Dracula <vlad@tran.sylvan.ia>
-> > Commit: Vlad Dracula <vlad@tran.sylvan.ia>
-> >
-> > Vlad's initial bio.
-> > ~~~
-> > {: .output}
-> {: .solution}
-{: .challenge}
-
-[commit-messages]: http://chris.beams.io/posts/git-commit/
