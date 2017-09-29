@@ -71,15 +71,15 @@ Let's make another change to `mars.txt`.
 
 ~~~
 $ nano mars.txt
-$ cat mars.txt
+$ pijul diff
 ~~~
 {: .bash}
 
 ~~~
-Cold and dry, but everything is my favorite color
-The two moons may be a problem for Wolfman
-But the Mummy will appreciate the lack of humidity
-An ill-considered change
+In file "~dracula/planets/mars.txt"
+
++ An ill-considered change
+
 ~~~
 {: .output}
 
@@ -129,17 +129,32 @@ $ piujl unrecord
 {: .bash}
 
 ~~~
-$ cat mars.txt
-~~~
-{: .bash}
+Hash: AfoEEkyla6Xr5OORUDeMCgOba1_dghEERjmYOcKf1JfpoahEL7RlhlwZWbY3ghi5UlS9425DPSYeN0rjbEz22_U
+Internal id: -gQSTKVrpes
+Authors: [""Vlad Dracula <vlad@tran.sylvan.ia>""]
+Timestamp: 2017-09-29 05:17:07.894942 UTC
 
-~~~
-Cold and dry, but everything is my favorite color
-The two moons may be a problem for Wolfman
-But the Mummy will appreciate the lack of humidity
+    I am going to regret this
 
+Shall I unrecord this patch? [ynkad] 
 ~~~
 {: .output}
+
+Answer "y" for "Yes".
+
+~~~
+Hash: AfoEEkyla6Xr5OORUDeMCgOba1_dghEERjmYOcKf1JfpoahEL7RlhlwZWbY3ghi5UlS9425DPSYeN0rjbEz22_U
+Internal id: -gQSTKVrpes
+Authors: [""Vlad Dracula <vlad@tran.sylvan.ia>""]
+Timestamp: 2017-09-29 05:17:07.894942 UTC
+
+    I am going to regret this
+
+Shall I unrecord this patch? [ynkad] 
+~~~
+{: .output}
+
+We want to keep this patch and all the remaining patches, so answer "d" for "Done".
 
 ~~~
 $ pijul changes
@@ -169,3 +184,33 @@ Timestamp: 2017-09-28 10:10:43.549970 UTC
     Start notes on Mars as a base
 ~~~
 {: .output}
+
+The patch has now gone from the repository, but the change still exists in the working copy, but we can 
+revert that too:
+
+~~~
+$ pijul diff
+~~~
+{: .bash}
+
+~~~
+In file "~dracula/planets/mars.txt"
+
++ An ill-considered change
+
+~~~
+{: .output}
+
+~~~
+$ pijul revert -a
+$ cat mars.txt
+~~~
+{: .bash}
+
+~~~
+Cold and dry, but everything is my favorite color
+The two moons may be a problem for Wolfman
+But the Mummy will appreciate the lack of humidity
+~~~
+{: .output}
+
